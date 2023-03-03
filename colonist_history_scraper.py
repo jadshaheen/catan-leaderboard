@@ -7,6 +7,8 @@ from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 import time
 
+from utils import build_html_string, build_new_leaderboard_file_data
+
 BASE_URL = "https://colonist.io/profile/{}#history"
 
 # uncomment the second path in both of the following for testing purposes,
@@ -142,102 +144,6 @@ def get_current_leaderboard_data(filepath):
     return current_leaderboard_data
 
 
-def build_html_string(
-    last_updated: str,
-    all_time_matches: int,
-    player_total_wins: int,
-    opponent_total_wins: int,
-    today_date: str,
-    player_today_wins: int,
-    opponent_today_wins: int,
-):
-    html_string = ""
-    html_string += "<!DOCTYPE html>\n"
-    html_string += "<html>\n"
-    html_string += "  <head>\n"
-    html_string += (
-        '    <meta name="viewport" content="width=device-width, initial-scale=1" />\n'
-    )
-    html_string += "    <title>Catan Leaderboard</title>\n"
-    html_string += '    <link rel="stylesheet" href="catan.css" />\n'
-    html_string += '    <link rel="icon" href="icon.png" />\n'
-    html_string += "  </head>\n"
-    html_string += "  <body>\n"
-    html_string += "    <h1>Catan Leaderboard</h1>\n"
-    html_string += "    <p><em>Last Updated: " + last_updated + "</em></p>\n"
-    html_string += '    <div class="contentdiv">\n'
-    html_string += '      <div class="wins_display">\n'
-    html_string += (
-        '        <h1 class="big_wins" id="left">' + str(player_total_wins) + "</h1>\n"
-    )
-    html_string += "      </div>\n"
-    html_string += '      <div class="player">\n'
-    html_string += '        <a href="https://colonist.io/profile/viri">\n'
-    html_string += '          <img class="player_img" src="viri.jpg" />\n'
-    html_string += "        </a>\n"
-    html_string += "      </div>\n"
-    html_string += '      <div class="centerdivs">\n'
-    html_string += '        <div class="allgames">\n'
-    html_string += "          <p>All-Time Matches</p>\n"
-    html_string += "          <h1>" + str(all_time_matches) + "</h1>\n"
-    html_string += "        </div>\n"
-    html_string += '        <div class="logo">\n'
-    html_string += '          <a href="https://colonist.io">\n'
-    html_string += '            <img class="logo_img" src="catan_logo.png" />\n'
-    html_string += "          </a>\n"
-    html_string += "        </div>\n"
-    html_string += "      </div>\n"
-    html_string += '      <div class="player">\n'
-    html_string += '        <a href="https://colonist.io/profile/jad">\n'
-    html_string += '          <img class="player_img" src="jad.jpg" />\n'
-    html_string += "        </a>\n"
-    html_string += "      </div>\n"
-    html_string += '      <div class="wins_display">\n'
-    html_string += (
-        '        <h1 class="big_wins" id="right">'
-        + str(opponent_total_wins)
-        + "</h1>\n"
-    )
-    html_string += "      </div>\n"
-    html_string += "    </div>\n"
-    html_string += '    <div class="tablediv">\n'
-    html_string += '      <table class="data">\n'
-    html_string += "        <tr>\n"
-    html_string += "          <td>viri</td>\n"
-    html_string += "          <td>Player</td>\n"
-    html_string += "          <td>jad</td>\n"
-    html_string += "        </tr>\n"
-    html_string += "        <tr>\n"
-    html_string += "          <td>" + str(player_total_wins) + "</td>\n"
-    html_string += "          <td>Total Wins</td>\n"
-    html_string += "          <td>" + str(opponent_total_wins) + "</td>\n"
-    html_string += "        </tr>\n"
-    html_string += "        <tr>\n"
-    html_string += (
-        "          <td>"
-        + str(round(player_total_wins / all_time_matches, 3))
-        + "</td>\n"
-    )
-    html_string += "          <td>Win Percentage</td>\n"
-    html_string += (
-        "          <td>"
-        + str(round(opponent_total_wins / all_time_matches, 3))
-        + "</td>\n"
-    )
-    html_string += "        </tr>\n"
-    html_string += "        <tr>\n"
-    html_string += "          <td>" + str(player_today_wins) + "</td>\n"
-    html_string += "          <td>Wins Today (" + today_date + ")</td>\n"
-    html_string += "          <td>" + str(opponent_today_wins) + "</td>\n"
-    html_string += "        </tr>\n"
-    html_string += "      </table>\n"
-    html_string += "    </div>\n"
-    html_string += "  </body>\n"
-    html_string += "</html>\n"
-
-    return html_string
-
-
 if __name__ == "__main__":
     player, opponent = "viri", "jad"
 
@@ -274,62 +180,34 @@ if __name__ == "__main__":
                 "daily_player_wins"
             ) + current_leaderboard_data.get("daily_opponent_wins")
 
-            # move rest of this 'if' into its own function
-
-            new_leaderboard_file_data.append("last updated: " + update_time + "\n\n")
-
             # update overall leaderboard
-            new_leaderboard_file_data.append("ALL-TIME\n")
             updated_total_matches = sum(wins_dict.values()) + total_matches
-            new_leaderboard_file_data.append(
-                "Matches: " + str(updated_total_matches) + "\n\n"
-            )
-            total_player_wins = wins_dict.get(player) + current_leaderboard_data.get(
+            player_total_wins = wins_dict.get(player) + current_leaderboard_data.get(
                 "player_wins"
             )
-            total_opponent_wins = wins_dict.get(
+            opponent_total_wins = wins_dict.get(
                 opponent
             ) + current_leaderboard_data.get("opponent_wins")
-            new_leaderboard_file_data.append(
-                player
-                + ": "
-                + str(total_player_wins)
-                + " ("
-                + str(round(total_player_wins / updated_total_matches, 3))
-                + ")"
-                + "\n"
-            )
-            new_leaderboard_file_data.append(
-                opponent
-                + ": "
-                + str(total_opponent_wins)
-                + " ("
-                + str(round(total_opponent_wins / updated_total_matches, 3))
-                + ")"
-                + "\n"
-            )
-            new_leaderboard_file_data.append("\n")
 
             # update daily leaderboard
             # Retrieve latest date of NEW game played which will be date of first element in matches (below)
             latest_game_date = matches[0][0].split(" ")[0]
-            latest_date_matches, latest_date_player_wins, latest_date_opponent_wins = (
+            latest_date_matches, player_latest_date_wins, opponent_latest_date_wins = (
                 0,
                 0,
                 0,
             )
 
             # consolidate this if/else so we dont repeat logic but just use the right wins_dict (either total or latest_date)
-            new_leaderboard_file_data.append("TODAY (" + latest_game_date + ")" + "\n")
             if (
                 latest_game_date
                 == current_leaderboard_data.get("daily_leaderboard_date").split(" ")[0]
             ):
                 latest_date_matches = sum(wins_dict.values()) + daily_matches
-                latest_date_player_wins = wins_dict.get(
+                player_latest_date_wins = wins_dict.get(
                     player
                 ) + current_leaderboard_data.get("daily_player_wins")
-                latest_date_opponent_wins = wins_dict.get(
+                opponent_latest_date_wins = wins_dict.get(
                     opponent
                 ) + current_leaderboard_data.get("daily_opponent_wins")
             else:
@@ -343,22 +221,24 @@ if __name__ == "__main__":
                 )
                 latest_date_matches = sum(latest_date_wins_dict.values())
                 (
-                    latest_date_player_wins,
-                    latest_date_opponent_wins,
+                    player_latest_date_wins,
+                    opponent_latest_date_wins,
                 ) = latest_date_wins_dict.get(player), latest_date_wins_dict.get(
                     opponent
                 )
 
-            new_leaderboard_file_data.append(
-                "Matches: " + str(latest_date_matches) + "\n\n"
+            new_leaderboard_file_data = build_new_leaderboard_file_data(
+                player=player,
+                opponent=opponent,
+                update_time=update_time,
+                all_time_matches=updated_total_matches,
+                player_total_wins=player_total_wins,
+                opponent_total_wins=opponent_total_wins,
+                latest_game_date=latest_game_date,
+                latest_date_matches=latest_date_matches,
+                player_latest_date_wins=player_latest_date_wins,
+                opponent_latest_date_wins=opponent_latest_date_wins,
             )
-            new_leaderboard_file_data.append(
-                player + ": " + str(latest_date_player_wins) + "\n"
-            )
-            new_leaderboard_file_data.append(
-                opponent + ": " + str(latest_date_opponent_wins) + "\n"
-            )
-            new_leaderboard_file_data.append("\n")
 
             with open(LEADERBOARD_FILEPATH, "w") as file:
                 for line in new_leaderboard_file_data:
@@ -366,13 +246,13 @@ if __name__ == "__main__":
 
             with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
                 html_string = build_html_string(
-                    update_time,
-                    updated_total_matches,
-                    total_player_wins,
-                    total_opponent_wins,
-                    latest_game_date,
-                    latest_date_player_wins,
-                    latest_date_opponent_wins,
+                    update_time=update_time,
+                    all_time_matches=updated_total_matches,
+                    player_total_wins=player_total_wins,
+                    opponent_total_wins=opponent_total_wins,
+                    latest_game_date=latest_game_date,
+                    player_latest_date_wins=player_latest_date_wins,
+                    opponent_latest_date_wins=opponent_latest_date_wins,
                 )
                 file.write(html_string)
 
