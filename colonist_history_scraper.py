@@ -360,6 +360,10 @@ if __name__ == "__main__":
             )
             new_leaderboard_file_data.append("\n")
 
+            with open(LEADERBOARD_FILEPATH, "w") as file:
+                for line in new_leaderboard_file_data:
+                    file.write(line)
+
             with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
                 html_string = build_html_string(
                     update_time,
@@ -375,24 +379,21 @@ if __name__ == "__main__":
             print("Leaderboard updated!")
         else:
             print("Already up to date!")
-            # update last_updated time to reflect that leaderboard is accurate as of now, even though no new data was added
-            with open(LEADERBOARD_FILEPATH, "r") as file:
-                cur_file_lines = file.readlines()
-                new_leaderboard_file_data = [
-                    cur_file_lines[0].split(": ")[0] + ": " + update_time + "\n"
-                ] + cur_file_lines[1:]
-            with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
-                html_string = build_html_string(
-                    update_time,
-                    current_leaderboard_data.get("player_wins")
-                    + current_leaderboard_data.get("opponent_wins"),
-                    current_leaderboard_data.get("player_wins"),
-                    current_leaderboard_data.get("opponent_wins"),
-                    current_leaderboard_data.get("daily_leaderboard_date"),
-                    current_leaderboard_data.get("daily_player_wins"),
-                    current_leaderboard_data.get("daily_opponent_wins"),
-                )
-                file.write(html_string)
-        with open(LEADERBOARD_FILEPATH, "w") as file:
-            for line in new_leaderboard_file_data:
-                file.write(line)
+            # # update last_updated time to reflect that leaderboard is accurate as of now, even though no new data was added
+            # with open(LEADERBOARD_FILEPATH, "r") as file:
+            #     cur_file_lines = file.readlines()
+            #     new_leaderboard_file_data = [
+            #         cur_file_lines[0].split(": ")[0] + ": " + update_time + "\n"
+            #     ] + cur_file_lines[1:]
+            # with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
+            #     html_string = build_html_string(
+            #         update_time,
+            #         current_leaderboard_data.get("player_wins")
+            #         + current_leaderboard_data.get("opponent_wins"),
+            #         current_leaderboard_data.get("player_wins"),
+            #         current_leaderboard_data.get("opponent_wins"),
+            #         current_leaderboard_data.get("daily_leaderboard_date"),
+            #         current_leaderboard_data.get("daily_player_wins"),
+            #         current_leaderboard_data.get("daily_opponent_wins"),
+            #     )
+            #     file.write(html_string)
