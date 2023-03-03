@@ -379,12 +379,18 @@ if __name__ == "__main__":
             print("Leaderboard updated!")
         else:
             print("Already up to date!")
-            # # update last_updated time to reflect that leaderboard is accurate as of now, even though no new data was added
+            """
+            Uncomment the below code to update last_updated time to reflect that leaderboard is accurate as of now,
+            even though no new data was added. This means a new commit will be published at each cronjob run.
+            """
             # with open(LEADERBOARD_FILEPATH, "r") as file:
             #     cur_file_lines = file.readlines()
             #     new_leaderboard_file_data = [
             #         cur_file_lines[0].split(": ")[0] + ": " + update_time + "\n"
             #     ] + cur_file_lines[1:]
+            # with open(LEADERBOARD_FILEPATH, "w") as file:
+            #     for line in new_leaderboard_file_data:
+            #         file.write(line)
             # with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
             #     html_string = build_html_string(
             #         update_time,
