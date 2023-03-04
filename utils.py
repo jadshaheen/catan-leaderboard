@@ -15,7 +15,7 @@ def build_html_string(
         '    <meta name="viewport" content="width=device-width, initial-scale=1" />\n'
     )
     html_string += "    <title>Catan Leaderboard</title>\n"
-    html_string += '    <link rel="stylesheet" href="catan.css" />\n'
+    html_string += '    <link rel="stylesheet" href="catan/catan.css" />\n'
     html_string += '    <link rel="icon" href="icon.png" />\n'
     html_string += "  </head>\n"
     html_string += "  <body>\n"
@@ -23,13 +23,20 @@ def build_html_string(
     html_string += "    <p><em>Last Updated: " + update_time + "</em></p>\n"
     html_string += '    <div class="contentdiv">\n'
     html_string += '      <div class="wins_display">\n'
+    html_string += '        <div class="big_container">\n'
     html_string += (
-        '        <h1 class="big_wins" id="left">' + str(player_total_wins) + "</h1>\n"
+        '          <h1 class="big_wins" id="left">' + str(player_total_wins) + "</h1>\n"
     )
+    html_string += (
+        '          <h2 class="big_percent">('
+        + str(round(player_total_wins / all_time_matches, 3))
+        + ")</h2>\n"
+    )
+    html_string += "        </div>\n"
     html_string += "      </div>\n"
     html_string += '      <div class="player">\n'
     html_string += '        <a href="https://colonist.io/profile/viri">\n'
-    html_string += '          <img class="player_img" src="viri.jpg" />\n'
+    html_string += '          <img class="player_img" src="catan/viri.jpg" />\n'
     html_string += "        </a>\n"
     html_string += "      </div>\n"
     html_string += '      <div class="centerdivs">\n'
@@ -39,21 +46,28 @@ def build_html_string(
     html_string += "        </div>\n"
     html_string += '        <div class="logo">\n'
     html_string += '          <a href="https://colonist.io">\n'
-    html_string += '            <img class="logo_img" src="catan_logo.png" />\n'
+    html_string += '            <img class="logo_img" src="catan/catan_logo.png" />\n'
     html_string += "          </a>\n"
     html_string += "        </div>\n"
     html_string += "      </div>\n"
     html_string += '      <div class="player">\n'
     html_string += '        <a href="https://colonist.io/profile/jad">\n'
-    html_string += '          <img class="player_img" src="jad.jpg" />\n'
+    html_string += '          <img class="player_img" src="catan/jad.jpg" />\n'
     html_string += "        </a>\n"
     html_string += "      </div>\n"
     html_string += '      <div class="wins_display">\n'
+    html_string += '        <div class="big_container">\n'
     html_string += (
-        '        <h1 class="big_wins" id="right">'
+        '          <h1 class="big_wins" id="right">'
         + str(opponent_total_wins)
         + "</h1>\n"
     )
+    html_string += (
+        '          <h2 class="big_percent">('
+        + str(round(opponent_total_wins / all_time_matches, 3))
+        + ")</h2>\n"
+    )
+    html_string += "        </div>\n"
     html_string += "      </div>\n"
     html_string += "    </div>\n"
     html_string += '    <div class="tablediv">\n'
@@ -66,17 +80,19 @@ def build_html_string(
     html_string += "        <tr>\n"
     html_string += "          <td>" + str(player_total_wins) + "</td>\n"
     html_string += "          <td>Total Wins</td>\n"
-    html_string += "          <td>" + str(opponent_total_wins) + "</td>\n"
+    html_string += (
+        '          <h1 class="big_wins" id="left">' + str(player_total_wins) + "</h1>\n"
+    )
     html_string += "        </tr>\n"
     html_string += "        <tr>\n"
     html_string += (
-        "          <td>"
+        "          <td>0"
         + str(round(player_total_wins / all_time_matches, 3))
         + "</td>\n"
     )
     html_string += "          <td>Win Percentage</td>\n"
     html_string += (
-        "          <td>"
+        "          <td>0"
         + str(round(opponent_total_wins / all_time_matches, 3))
         + "</td>\n"
     )
