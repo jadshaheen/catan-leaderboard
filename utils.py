@@ -84,13 +84,13 @@ def build_html_string(
     html_string += "        </tr>\n"
     html_string += "        <tr>\n"
     html_string += (
-        "          <td>0"
+        "          <td>"
         + str(round(player_total_wins / all_time_matches, 3))
         + "</td>\n"
     )
     html_string += "          <td>Win Percentage</td>\n"
     html_string += (
-        "          <td>0"
+        "          <td>"
         + str(round(opponent_total_wins / all_time_matches, 3))
         + "</td>\n"
     )

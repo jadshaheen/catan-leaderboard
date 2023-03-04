@@ -44,26 +44,26 @@ if __name__ == "__main__":
     lines[10] = re.sub(r"\d+-\d+-\d+ \d+:\d+:\d+", "' + update_time + '", lines[10])
     lines[14] = re.sub(r"\d\d+", "' + str(player_total_wins) + '", lines[14])
     lines[15] = re.sub(
-        r"\.\d+",
+        r"0\.\d+",
         "' + str(round(player_total_wins / all_time_matches, 3)) + '",
         lines[15],
     )
     lines[26] = re.sub(r"\d\d+", "' + str(all_time_matches) + '", lines[26])
     lines[41] = re.sub(r"\d\d+", "' + str(opponent_total_wins) + '", lines[41])
     lines[42] = re.sub(
-        r"\.\d+",
+        r"0\.\d+",
         "' + str(round(opponent_total_wins / all_time_matches, 3)) + '",
         lines[42],
     )
     lines[54] = re.sub(r"\d\d+", "' + str(player_total_wins) + '", lines[54])
     lines[56] = re.sub(r"\d\d+", "' + str(opponent_total_wins) + '", lines[56])
     lines[59] = re.sub(
-        r"\.\d+",
+        r"0\.\d+",
         "' + str(round(player_total_wins / all_time_matches, 3)) + '",
         lines[59],
     )
     lines[61] = re.sub(
-        r"\.\d+",
+        r"0\.\d+",
         "' + str(round(opponent_total_wins / all_time_matches, 3)) + '",
         lines[61],
     )
