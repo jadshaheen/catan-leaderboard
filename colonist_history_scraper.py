@@ -18,7 +18,7 @@ LEADERBOARD_FILEPATH = (
     # "/Users/jad/Desktop/catantime.txt"
 )
 LEADERBOARD_HTML_DISPLAY_FILEPATH = (
-    "/Users/jad/Desktop/projects/jadshaheen.github.io/catan/catan.html"
+    "/Users/jad/Desktop/projects/jadshaheen.github.io/catan.html"
     # "/Users/jad/Desktop/catanhtml.txt"
 )
 
