@@ -56,7 +56,7 @@ if __name__ == "__main__":
         lines[42],
     )
     lines[54] = re.sub(r"\d\d+", "' + str(player_total_wins) + '", lines[54])
-    lines[56] = re.sub(r"\d\d+", "' + str(opponent_total_wins) + '", lines[14])
+    lines[56] = re.sub(r"\d\d+", "' + str(opponent_total_wins) + '", lines[56])
     lines[59] = re.sub(
         r"\.\d+",
         "' + str(round(player_total_wins / all_time_matches, 3)) + '",
