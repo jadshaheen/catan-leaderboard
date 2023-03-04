@@ -80,9 +80,7 @@ def build_html_string(
     html_string += "        <tr>\n"
     html_string += "          <td>" + str(player_total_wins) + "</td>\n"
     html_string += "          <td>Total Wins</td>\n"
-    html_string += (
-        '          <h1 class="big_wins" id="left">' + str(player_total_wins) + "</h1>\n"
-    )
+    html_string += "          <td>" + str(opponent_total_wins) + "</td>\n"
     html_string += "        </tr>\n"
     html_string += "        <tr>\n"
     html_string += (
