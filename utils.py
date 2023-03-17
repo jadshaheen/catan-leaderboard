@@ -1,4 +1,6 @@
 def build_html_string(
+    player: str,
+    opponent: str,
     update_time: str,
     all_time_matches: int,
     player_total_wins: int,
@@ -35,8 +37,10 @@ def build_html_string(
     html_string += "        </div>\n"
     html_string += "      </div>\n"
     html_string += '      <div class="player">\n'
-    html_string += '        <a href="https://colonist.io/profile/viri">\n'
-    html_string += '          <img class="player_img" src="catan/viri.jpg" />\n'
+    html_string += '        <a href="https://colonist.io/profile/' + player + '">\n'
+    html_string += (
+        '          <img class="player_img" src="catan/' + player + '.jpg" />\n'
+    )
     html_string += "        </a>\n"
     html_string += "      </div>\n"
     html_string += '      <div class="centerdivs">\n'
@@ -51,8 +55,10 @@ def build_html_string(
     html_string += "        </div>\n"
     html_string += "      </div>\n"
     html_string += '      <div class="player">\n'
-    html_string += '        <a href="https://colonist.io/profile/jad">\n'
-    html_string += '          <img class="player_img" src="catan/jad.jpg" />\n'
+    html_string += '        <a href="https://colonist.io/profile/' + opponent + '">\n'
+    html_string += (
+        '          <img class="player_img" src="catan/' + opponent + '.jpg" />\n'
+    )
     html_string += "        </a>\n"
     html_string += "      </div>\n"
     html_string += '      <div class="wins_display">\n'
@@ -73,9 +79,9 @@ def build_html_string(
     html_string += '    <div class="tablediv">\n'
     html_string += '      <table class="data">\n'
     html_string += "        <tr>\n"
-    html_string += "          <td>viri</td>\n"
+    html_string += "          <td>" + player + "</td>\n"
     html_string += "          <td>Player</td>\n"
-    html_string += "          <td>jad</td>\n"
+    html_string += "          <td>" + opponent + "</td>\n"
     html_string += "        </tr>\n"
     html_string += "        <tr>\n"
     html_string += "          <td>" + str(player_total_wins) + "</td>\n"

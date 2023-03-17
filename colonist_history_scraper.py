@@ -5,6 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+import sys
 import time
 
 from utils import build_html_string, build_new_leaderboard_file_data
@@ -14,11 +15,11 @@ BASE_URL = "https://colonist.io/profile/{}#history"
 # uncomment the second path in both of the following for testing purposes,
 # so as not to corrupt the actual files the leaderboard uses
 LEADERBOARD_FILEPATH = (
-    "/Users/jad/Desktop/projects/jadshaheen.github.io/catan/catan_leaderboard.txt"
+    "/Users/jad/Desktop/projects/jadshaheen.github.io/catan/catan_leaderboard_{}.txt"
     # "/Users/jad/Desktop/catantime.txt"
 )
 LEADERBOARD_HTML_DISPLAY_FILEPATH = (
-    "/Users/jad/Desktop/projects/jadshaheen.github.io/catan.html"
+    "/Users/jad/Desktop/projects/jadshaheen.github.io/catan_{}.html"
     # "/Users/jad/Desktop/catanhtml.txt"
 )
 
@@ -63,7 +64,14 @@ def filter_rows(table_rows, opponent, last_updated):
     data = []
 
     for i in range(len(table_rows))[::2]:
-        datum = [col.text for col in table_rows[i].find_all("td")]
+        datum = []
+        for col in table_rows[i].find_all("td"):
+            # the first image alt text encodes whether the game was finished
+            image = col.find("img", alt=True)
+            if image:
+                datum.append(image["alt"])
+            else:
+                datum.append(col.text)
         secondary_table = [col.text for col in table_rows[i + 1].find_all("td")]
         # secondary table is of the form [..., opponent, '', rank]
         for j in range(len(secondary_table)):
@@ -86,8 +94,10 @@ def filter_rows(table_rows, opponent, last_updated):
         for row in data
     ]
 
+    # filter out unfinished games
+    filtered_data = [row for row in data if row[5] == "finished"]
     # filter out games that don't involve 'opponent'
-    filtered_data = [row for row in data if opponent in row[6].split(" ")]
+    filtered_data = [row for row in filtered_data if opponent in row[6].split(" ")]
     # filter out games that ENDED before LAST_UPDATED (aka would already have been included in leaderboard)
     filtered_data = [datum for datum in filtered_data if datum[0] > last_updated]
 
@@ -146,8 +156,17 @@ def get_current_leaderboard_data(filepath):
 
 if __name__ == "__main__":
     player, opponent = "viri", "jad"
+    if len(sys.argv) > 1:
+        player = sys.argv[1]
+        # add custom opponent as well
 
-    current_leaderboard_data = get_current_leaderboard_data(LEADERBOARD_FILEPATH)
+    # player names that include '#' character (a colonist default) need to use encoding for urls to work
+    player = player.replace("#", "%23")
+    opponent = opponent.split("#", "%23")
+
+    current_leaderboard_data = get_current_leaderboard_data(
+        LEADERBOARD_FILEPATH.format(player.split("%")[0])
+    )
 
     time_since_last_refresh = datetime.now() - datetime.strptime(
         current_leaderboard_data.get("last_updated"), "%Y-%m-%d %H:%M:%S"
@@ -240,12 +259,16 @@ if __name__ == "__main__":
                 opponent_latest_date_wins=opponent_latest_date_wins,
             )
 
-            with open(LEADERBOARD_FILEPATH, "w") as file:
+            with open(LEADERBOARD_FILEPATH.format(player.split("%")[0]), "w") as file:
                 for line in new_leaderboard_file_data:
                     file.write(line)
 
-            with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
+            with open(
+                LEADERBOARD_HTML_DISPLAY_FILEPATH.format(player.split("%")[0]), "w"
+            ) as file:
                 html_string = build_html_string(
+                    player=player.split("%")[0],
+                    opponent=opponent.split("%")[0],
                     update_time=update_time,
                     all_time_matches=updated_total_matches,
                     player_total_wins=player_total_wins,
@@ -263,16 +286,18 @@ if __name__ == "__main__":
             Uncomment the below code to update last_updated time to reflect that leaderboard is accurate as of now,
             even though no new data was added. This means a new commit will be published at each cronjob run.
             """
-            # with open(LEADERBOARD_FILEPATH, "r") as file:
+            # with open(LEADERBOARD_FILEPATH.format(player.split("%")[0]), "r") as file:
             #     cur_file_lines = file.readlines()
             #     new_leaderboard_file_data = [
             #         cur_file_lines[0].split(": ")[0] + ": " + update_time + "\n"
             #     ] + cur_file_lines[1:]
-            # with open(LEADERBOARD_FILEPATH, "w") as file:
+            # with open(LEADERBOARD_FILEPATH.format(player.split("%")[0]), "w") as file:
             #     for line in new_leaderboard_file_data:
             #         file.write(line)
             # with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
             #     html_string = build_html_string(
+            #         player=player.split("%")[0],
+            #         opponent=opponent.split("%")[0],
             #         update_time,
             #         current_leaderboard_data.get("player_wins")
             #         + current_leaderboard_data.get("opponent_wins"),
