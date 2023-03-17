@@ -162,7 +162,7 @@ if __name__ == "__main__":
 
     # player names that include '#' character (a colonist default) need to use encoding for urls to work
     player = player.replace("#", "%23")
-    opponent = opponent.split("#", "%23")
+    opponent = opponent.replace("#", "%23")
 
     current_leaderboard_data = get_current_leaderboard_data(
         LEADERBOARD_FILEPATH.format(player.split("%")[0])
