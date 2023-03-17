@@ -39,7 +39,9 @@ def build_html_string(
     html_string += '      <div class="player">\n'
     html_string += '        <a href="https://colonist.io/profile/' + player + '">\n'
     html_string += (
-        '          <img class="player_img" src="catan/' + player + '.jpg" />\n'
+        '          <img class="player_img" src="catan/'
+        + player.split("%")[0]
+        + '.jpg" />\n'
     )
     html_string += "        </a>\n"
     html_string += "      </div>\n"
@@ -57,7 +59,9 @@ def build_html_string(
     html_string += '      <div class="player">\n'
     html_string += '        <a href="https://colonist.io/profile/' + opponent + '">\n'
     html_string += (
-        '          <img class="player_img" src="catan/' + opponent + '.jpg" />\n'
+        '          <img class="player_img" src="catan/'
+        + opponent.split("%")[0]
+        + '.jpg" />\n'
     )
     html_string += "        </a>\n"
     html_string += "      </div>\n"
@@ -79,9 +83,9 @@ def build_html_string(
     html_string += '    <div class="tablediv">\n'
     html_string += '      <table class="data">\n'
     html_string += "        <tr>\n"
-    html_string += "          <td>" + player + "</td>\n"
+    html_string += "          <td>" + player.split("%")[0] + "</td>\n"
     html_string += "          <td>Player</td>\n"
-    html_string += "          <td>" + opponent + "</td>\n"
+    html_string += "          <td>" + opponent.split("%")[0] + "</td>\n"
     html_string += "        </tr>\n"
     html_string += "        <tr>\n"
     html_string += "          <td>" + str(player_total_wins) + "</td>\n"

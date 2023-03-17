@@ -267,8 +267,8 @@ if __name__ == "__main__":
                 LEADERBOARD_HTML_DISPLAY_FILEPATH.format(player.split("%")[0]), "w"
             ) as file:
                 html_string = build_html_string(
-                    player=player.split("%")[0],
-                    opponent=opponent.split("%")[0],
+                    player=player,
+                    opponent=opponent,
                     update_time=update_time,
                     all_time_matches=updated_total_matches,
                     player_total_wins=player_total_wins,
@@ -296,8 +296,8 @@ if __name__ == "__main__":
             #         file.write(line)
             # with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
             #     html_string = build_html_string(
-            #         player=player.split("%")[0],
-            #         opponent=opponent.split("%")[0],
+            #         player=player,
+            #         opponent=opponent,
             #         update_time,
             #         current_leaderboard_data.get("player_wins")
             #         + current_leaderboard_data.get("opponent_wins"),
