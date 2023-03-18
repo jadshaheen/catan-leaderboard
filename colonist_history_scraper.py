@@ -5,6 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+import argparse
 import sys
 import time
 
@@ -16,11 +17,9 @@ BASE_URL = "https://colonist.io/profile/{}#history"
 # so as not to corrupt the actual files the leaderboard uses
 LEADERBOARD_FILEPATH = (
     "/Users/jad/Desktop/projects/jadshaheen.github.io/catan/catan_leaderboard_{}.txt"
-    # "/Users/jad/Desktop/catantime.txt"
 )
 LEADERBOARD_HTML_DISPLAY_FILEPATH = (
     "/Users/jad/Desktop/projects/jadshaheen.github.io/catan_{}.html"
-    # "/Users/jad/Desktop/catanhtml.txt"
 )
 
 
@@ -155,10 +154,29 @@ def get_current_leaderboard_data(filepath):
 
 
 if __name__ == "__main__":
-    player, opponent = "viri", "jad"
-    if len(sys.argv) > 1:
-        player = sys.argv[1]
-        # add custom opponent as well
+    parser = argparse.ArgumentParser(
+        description="Use this script to update catan leaderboards at jadshaheen.com."
+    )
+    parser.add_argument(
+        "player", help="Colonist username of first player on leaderboard"
+    )
+    parser.add_argument(
+        "opponent", help="Colonist username of second player on leaderboard"
+    )
+    parser.add_argument(
+        "-t",
+        "--test",
+        action="store_true",
+        help="Instead of updating the actual files the website uses, if this flag is present update two dummy files on my Desktop",
+    )
+
+    args = parser.parse_args()
+
+    player, opponent = args.player, args.opponent
+
+    if args.test:
+        LEADERBOARD_FILEPATH = "/Users/jad/Desktop/catantime.txt"
+        LEADERBOARD_HTML_DISPLAY_FILEPATH = "/Users/jad/Desktop/catanhtml.txt"
 
     # player names that include '#' character (a colonist default) need to use encoding for urls to work
     player = player.replace("#", "%23")
