@@ -18,6 +18,8 @@ def build_html_string(
     html_string = template.render(
         player=player,
         opponent=opponent,
+        player_name=player.split("%")[0],
+        opponent_name=opponent.split("%")[0],
         update_time=update_time,
         all_time_matches=all_time_matches,
         player_total_wins=player_total_wins,

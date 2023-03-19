@@ -1,4 +1,3 @@
-from jinja2 import Template
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -141,8 +140,8 @@ if __name__ == "__main__":
     player, opponent = args.player, args.opponent
 
     if args.test:
-        LEADERBOARD_FILEPATH = "/Users/jad/Desktop/catantime.txt"
-        LEADERBOARD_HTML_DISPLAY_FILEPATH = "/Users/jad/Desktop/catanhtml.txt"
+        LEADERBOARD_FILEPATH = "/Users/jad/Desktop/catan_leaderboard_test.txt"
+        LEADERBOARD_HTML_DISPLAY_FILEPATH = "/Users/jad/Desktop/catan_test.html"
 
     # player names that include '#' character (a colonist default) need to use encoding for urls to work
     player = player.replace("#", "%23")
