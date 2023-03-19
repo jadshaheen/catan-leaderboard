@@ -1,3 +1,4 @@
+from jinja2 import Template
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -6,10 +7,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 import argparse
-import sys
 import time
 
-from utils import build_html_string, build_new_leaderboard_file_data
+from utils import (
+    build_html_string,
+    get_current_leaderboard_data,
+    build_new_leaderboard_file_data,
+)
 
 BASE_URL = "https://colonist.io/profile/{}#history"
 
@@ -113,44 +117,6 @@ def get_num_wins(match_data, player, opponent):
             wins_dict[opponent] += 1
 
     return wins_dict
-
-
-def get_current_leaderboard_data(filepath):
-    current_leaderboard_data = {
-        "last_updated": "1970-01-01 00:00:00",
-        "player_wins": 0,
-        "opponent_wins": 0,
-        "daily_leaderboard_date": "1970-01-01 00:00:00",
-        "daily_player_wins": 0,
-        "daily_opponent_wins": 0,
-    }
-
-    try:
-        file = open(filepath, "r")
-        lines = file.readlines()
-        real_lines = [line for line in lines if line != "\n"]
-        current_leaderboard_data["last_updated"] = (
-            real_lines[0].split(": ")[1].strip("\n")
-        )
-        current_leaderboard_data["player_wins"] = int(
-            real_lines[3].split(": ")[1].split(" ")[0]
-        )
-        current_leaderboard_data["opponent_wins"] = int(
-            real_lines[4].split(": ")[1].split(" ")[0]
-        )
-        current_leaderboard_data["daily_leaderboard_date"] = (
-            real_lines[5].split(" ")[1].strip("()\n")
-        )
-        current_leaderboard_data["daily_player_wins"] = int(
-            real_lines[7].split(": ")[1]
-        )
-        current_leaderboard_data["daily_opponent_wins"] = int(
-            real_lines[8].split(": ")[1]
-        )
-    except FileNotFoundError:
-        pass
-
-    return current_leaderboard_data
 
 
 if __name__ == "__main__":

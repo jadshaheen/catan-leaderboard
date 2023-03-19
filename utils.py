@@ -1,3 +1,6 @@
+from jinja2 import Template
+
+
 def build_html_string(
     player: str,
     opponent: str,
@@ -8,114 +11,64 @@ def build_html_string(
     latest_game_date: str,
     player_latest_date_wins: int,
     opponent_latest_date_wins: int,
-):
-    html_string = ""
-    html_string += "<!DOCTYPE html>\n"
-    html_string += "<html>\n"
-    html_string += "  <head>\n"
-    html_string += (
-        '    <meta name="viewport" content="width=device-width, initial-scale=1" />\n'
+) -> str:
+    with open("template.html") as f:
+        template_str = f.read()
+    template = Template(template_str)
+    html_string = template.render(
+        player=player,
+        opponent=opponent,
+        update_time=update_time,
+        all_time_matches=all_time_matches,
+        player_total_wins=player_total_wins,
+        opponent_total_wins=opponent_total_wins,
+        player_percent=round(player_total_wins / all_time_matches, 3),
+        opponent_percent=round(opponent_total_wins / all_time_matches, 3),
+        latest_game_date=latest_game_date,
+        player_latest_date_wins=player_latest_date_wins,
+        opponent_latest_date_wins=opponent_latest_date_wins,
+        player_image_url="catan/" + player.split("%")[0] + ".jpg",
+        opponent_image_url="catan/" + opponent.split("%")[0] + ".jpg",
     )
-    html_string += "    <title>Catan Leaderboard</title>\n"
-    html_string += '    <link rel="stylesheet" href="catan/catan.css" />\n'
-    html_string += '    <link rel="icon" href="icon.png" />\n'
-    html_string += "  </head>\n"
-    html_string += "  <body>\n"
-    html_string += "    <h1>Catan Leaderboard</h1>\n"
-    html_string += "    <p><em>Last Updated: " + update_time + "</em></p>\n"
-    html_string += '    <div class="contentdiv">\n'
-    html_string += '      <div class="wins_display">\n'
-    html_string += '        <div class="big_container">\n'
-    html_string += (
-        '          <h1 class="big_wins" id="left">' + str(player_total_wins) + "</h1>\n"
-    )
-    html_string += (
-        '          <h2 class="big_percent">('
-        + str(round(player_total_wins / all_time_matches, 3))
-        + ")</h2>\n"
-    )
-    html_string += "        </div>\n"
-    html_string += "      </div>\n"
-    html_string += '      <div class="player">\n'
-    html_string += '        <a href="https://colonist.io/profile/' + player + '">\n'
-    html_string += (
-        '          <img class="player_img" src="catan/'
-        + player.split("%")[0]
-        + '.jpg" />\n'
-    )
-    html_string += "        </a>\n"
-    html_string += "      </div>\n"
-    html_string += '      <div class="centerdivs">\n'
-    html_string += '        <div class="allgames">\n'
-    html_string += "          <p>All-Time Matches</p>\n"
-    html_string += "          <h1>" + str(all_time_matches) + "</h1>\n"
-    html_string += "        </div>\n"
-    html_string += '        <div class="logo">\n'
-    html_string += '          <a href="https://colonist.io">\n'
-    html_string += '            <img class="logo_img" src="catan/catan_logo.png" />\n'
-    html_string += "          </a>\n"
-    html_string += "        </div>\n"
-    html_string += "      </div>\n"
-    html_string += '      <div class="player">\n'
-    html_string += '        <a href="https://colonist.io/profile/' + opponent + '">\n'
-    html_string += (
-        '          <img class="player_img" src="catan/'
-        + opponent.split("%")[0]
-        + '.jpg" />\n'
-    )
-    html_string += "        </a>\n"
-    html_string += "      </div>\n"
-    html_string += '      <div class="wins_display">\n'
-    html_string += '        <div class="big_container">\n'
-    html_string += (
-        '          <h1 class="big_wins" id="right">'
-        + str(opponent_total_wins)
-        + "</h1>\n"
-    )
-    html_string += (
-        '          <h2 class="big_percent">('
-        + str(round(opponent_total_wins / all_time_matches, 3))
-        + ")</h2>\n"
-    )
-    html_string += "        </div>\n"
-    html_string += "      </div>\n"
-    html_string += "    </div>\n"
-    html_string += '    <div class="tablediv">\n'
-    html_string += '      <table class="data">\n'
-    html_string += "        <tr>\n"
-    html_string += "          <td>" + player.split("%")[0] + "</td>\n"
-    html_string += "          <td>Player</td>\n"
-    html_string += "          <td>" + opponent.split("%")[0] + "</td>\n"
-    html_string += "        </tr>\n"
-    html_string += "        <tr>\n"
-    html_string += "          <td>" + str(player_total_wins) + "</td>\n"
-    html_string += "          <td>Total Wins</td>\n"
-    html_string += "          <td>" + str(opponent_total_wins) + "</td>\n"
-    html_string += "        </tr>\n"
-    html_string += "        <tr>\n"
-    html_string += (
-        "          <td>"
-        + str(round(player_total_wins / all_time_matches, 3))
-        + "</td>\n"
-    )
-    html_string += "          <td>Win Percentage</td>\n"
-    html_string += (
-        "          <td>"
-        + str(round(opponent_total_wins / all_time_matches, 3))
-        + "</td>\n"
-    )
-    html_string += "        </tr>\n"
-    html_string += "        <tr>\n"
-    html_string += "          <td>" + str(player_latest_date_wins) + "</td>\n"
-    html_string += "          <td>Wins Today (" + latest_game_date + ")</td>\n"
-    html_string += "          <td>" + str(opponent_latest_date_wins) + "</td>\n"
-    html_string += "        </tr>\n"
-    html_string += "      </table>\n"
-    html_string += "    </div>\n"
-    html_string += "  </body>\n"
-    html_string += "</html>\n"
-
     return html_string
+
+
+def get_current_leaderboard_data(filepath):
+    current_leaderboard_data = {
+        "last_updated": "1970-01-01 00:00:00",
+        "player_wins": 0,
+        "opponent_wins": 0,
+        "daily_leaderboard_date": "1970-01-01 00:00:00",
+        "daily_player_wins": 0,
+        "daily_opponent_wins": 0,
+    }
+
+    try:
+        file = open(filepath, "r")
+        lines = file.readlines()
+        real_lines = [line for line in lines if line != "\n"]
+        current_leaderboard_data["last_updated"] = (
+            real_lines[0].split(": ")[1].strip("\n")
+        )
+        current_leaderboard_data["player_wins"] = int(
+            real_lines[3].split(": ")[1].split(" ")[0]
+        )
+        current_leaderboard_data["opponent_wins"] = int(
+            real_lines[4].split(": ")[1].split(" ")[0]
+        )
+        current_leaderboard_data["daily_leaderboard_date"] = (
+            real_lines[5].split(" ")[1].strip("()\n")
+        )
+        current_leaderboard_data["daily_player_wins"] = int(
+            real_lines[7].split(": ")[1]
+        )
+        current_leaderboard_data["daily_opponent_wins"] = int(
+            real_lines[8].split(": ")[1]
+        )
+    except FileNotFoundError:
+        pass
+
+    return current_leaderboard_data
 
 
 def build_new_leaderboard_file_data(
