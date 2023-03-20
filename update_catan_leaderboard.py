@@ -263,7 +263,7 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
                 ) as file:
                     for line in new_leaderboard_file_data:
                         file.write(line)
-                with open(html_filepath, "w") as file:
+                with open(html_filepath.format(player.split("%")[0]), "w") as file:
                     html_string = build_html_string(
                         player=player,
                         opponent=opponent,
