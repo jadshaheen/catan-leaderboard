@@ -118,25 +118,7 @@ def get_num_wins(match_data, player, opponent):
     return wins_dict
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Use this script to update catan leaderboards at jadshaheen.com."
-    )
-    parser.add_argument(
-        "player", help="Colonist username of first player on leaderboard"
-    )
-    parser.add_argument(
-        "opponent", help="Colonist username of second player on leaderboard"
-    )
-    parser.add_argument(
-        "-t",
-        "--test",
-        action="store_true",
-        help="Instead of updating the actual files the website uses, if this flag is present update two dummy files on my Desktop",
-    )
-
-    args = parser.parse_args()
-
+def update_leaderboard(args):
     player, opponent = args.player, args.opponent
 
     if args.test:
@@ -266,28 +248,68 @@ if __name__ == "__main__":
         else:
             print("Already up to date!")
             """
-            Uncomment the below code to update last_updated time to reflect that leaderboard is accurate as of now,
-            even though no new data was added. This means a new commit will be published at each cronjob run.
+            If the --force option is given, update last_updated time to reflect that leaderboard is accurate as of now,
+            even though no new data was added. If provided in the cronjob, this means a new commit will be published at
+            each run.
             """
-            # with open(LEADERBOARD_FILEPATH.format(player.split("%")[0]), "r") as file:
-            #     cur_file_lines = file.readlines()
-            #     new_leaderboard_file_data = [
-            #         cur_file_lines[0].split(": ")[0] + ": " + update_time + "\n"
-            #     ] + cur_file_lines[1:]
-            # with open(LEADERBOARD_FILEPATH.format(player.split("%")[0]), "w") as file:
-            #     for line in new_leaderboard_file_data:
-            #         file.write(line)
-            # with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
-            #     html_string = build_html_string(
-            #         player=player,
-            #         opponent=opponent,
-            #         update_time,
-            #         current_leaderboard_data.get("player_wins")
-            #         + current_leaderboard_data.get("opponent_wins"),
-            #         current_leaderboard_data.get("player_wins"),
-            #         current_leaderboard_data.get("opponent_wins"),
-            #         current_leaderboard_data.get("daily_leaderboard_date"),
-            #         current_leaderboard_data.get("daily_player_wins"),
-            #         current_leaderboard_data.get("daily_opponent_wins"),
-            #     )
-            #     file.write(html_string)
+            if args.force:
+                with open(
+                    LEADERBOARD_FILEPATH.format(player.split("%")[0]), "r"
+                ) as file:
+                    cur_file_lines = file.readlines()
+                    new_leaderboard_file_data = [
+                        cur_file_lines[0].split(": ")[0] + ": " + update_time + "\n"
+                    ] + cur_file_lines[1:]
+                with open(
+                    LEADERBOARD_FILEPATH.format(player.split("%")[0]), "w"
+                ) as file:
+                    for line in new_leaderboard_file_data:
+                        file.write(line)
+                with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
+                    html_string = build_html_string(
+                        player=player,
+                        opponent=opponent,
+                        update_time=update_time,
+                        all_time_matches=current_leaderboard_data.get("player_wins")
+                        + current_leaderboard_data.get("opponent_wins"),
+                        player_total_wins=current_leaderboard_data.get("player_wins"),
+                        opponent_total_wins=current_leaderboard_data.get(
+                            "opponent_wins"
+                        ),
+                        latest_game_date=current_leaderboard_data.get(
+                            "daily_leaderboard_date"
+                        ),
+                        player_latest_date_wins=current_leaderboard_data.get(
+                            "daily_player_wins"
+                        ),
+                        opponent_latest_date_wins=current_leaderboard_data.get(
+                            "daily_opponent_wins"
+                        ),
+                    )
+                    file.write(html_string)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Use this script to update catan leaderboards at jadshaheen.com."
+    )
+    parser.add_argument(
+        "player", help="Colonist username of first player on leaderboard"
+    )
+    parser.add_argument(
+        "opponent", help="Colonist username of second player on leaderboard"
+    )
+    parser.add_argument(
+        "-t",
+        "--test",
+        action="store_true",
+        help="Instead of updating the actual files the website uses, if this flag is present update two dummy files on my Desktop",
+    )
+    parser.add_argument(
+        "-f",
+        "--force",
+        action="store_true",
+        help="Force rewriting the files even if there is no new game data",
+    )
+
+    args = parser.parse_args()
