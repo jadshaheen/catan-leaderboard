@@ -118,19 +118,19 @@ def get_num_wins(match_data, player, opponent):
     return wins_dict
 
 
-def update_leaderboard(args):
+def update_leaderboard(args, leaderboard_filepath, html_filepath):
     player, opponent = args.player, args.opponent
 
     if args.test:
-        LEADERBOARD_FILEPATH = "/Users/jad/Desktop/catan_leaderboard_test.txt"
-        LEADERBOARD_HTML_DISPLAY_FILEPATH = "/Users/jad/Desktop/catan_test.html"
+        leaderboard_filepath = "/Users/jad/Desktop/catan_leaderboard_test.txt"
+        html_filepath = "/Users/jad/Desktop/catan_test.html"
 
     # player names that include '#' character (a colonist default) need to use encoding for urls to work
     player = player.replace("#", "%23")
     opponent = opponent.replace("#", "%23")
 
     current_leaderboard_data = get_current_leaderboard_data(
-        LEADERBOARD_FILEPATH.format(player.split("%")[0])
+        leaderboard_filepath.format(player.split("%")[0])
     )
 
     time_since_last_refresh = datetime.now() - datetime.strptime(
@@ -224,13 +224,11 @@ def update_leaderboard(args):
                 opponent_latest_date_wins=opponent_latest_date_wins,
             )
 
-            with open(LEADERBOARD_FILEPATH.format(player.split("%")[0]), "w") as file:
+            with open(leaderboard_filepath.format(player.split("%")[0]), "w") as file:
                 for line in new_leaderboard_file_data:
                     file.write(line)
 
-            with open(
-                LEADERBOARD_HTML_DISPLAY_FILEPATH.format(player.split("%")[0]), "w"
-            ) as file:
+            with open(html_filepath.format(player.split("%")[0]), "w") as file:
                 html_string = build_html_string(
                     player=player,
                     opponent=opponent,
@@ -254,18 +252,18 @@ def update_leaderboard(args):
             """
             if args.force:
                 with open(
-                    LEADERBOARD_FILEPATH.format(player.split("%")[0]), "r"
+                    leaderboard_filepath.format(player.split("%")[0]), "r"
                 ) as file:
                     cur_file_lines = file.readlines()
                     new_leaderboard_file_data = [
                         cur_file_lines[0].split(": ")[0] + ": " + update_time + "\n"
                     ] + cur_file_lines[1:]
                 with open(
-                    LEADERBOARD_FILEPATH.format(player.split("%")[0]), "w"
+                    leaderboard_filepath.format(player.split("%")[0]), "w"
                 ) as file:
                     for line in new_leaderboard_file_data:
                         file.write(line)
-                with open(LEADERBOARD_HTML_DISPLAY_FILEPATH, "w") as file:
+                with open(html_filepath, "w") as file:
                     html_string = build_html_string(
                         player=player,
                         opponent=opponent,
@@ -314,4 +312,4 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    update_leaderboard(args)
+    update_leaderboard(args, LEADERBOARD_FILEPATH, LEADERBOARD_HTML_DISPLAY_FILEPATH)
