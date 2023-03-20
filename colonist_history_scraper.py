@@ -19,10 +19,10 @@ BASE_URL = "https://colonist.io/profile/{}#history"
 # uncomment the second path in both of the following for testing purposes,
 # so as not to corrupt the actual files the leaderboard uses
 LEADERBOARD_FILEPATH = (
-    "/Users/jad/Desktop/projects/jadshaheen.github.io/catan/catan_leaderboard_{}.txt"
+    "/Users/jad/Desktop/projects/jadshaheen.github.io/catan/leaderboard_{}.txt"
 )
 LEADERBOARD_HTML_DISPLAY_FILEPATH = (
-    "/Users/jad/Desktop/projects/jadshaheen.github.io/catan_{}.html"
+    "/Users/jad/Desktop/projects/jadshaheen.github.io/catan/{}.html"
 )
 
 
