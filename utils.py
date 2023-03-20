@@ -29,8 +29,8 @@ def build_html_string(
         latest_game_date=latest_game_date,
         player_latest_date_wins=player_latest_date_wins,
         opponent_latest_date_wins=opponent_latest_date_wins,
-        player_image_url="catan/" + player.split("%")[0] + ".jpg",
-        opponent_image_url="catan/" + opponent.split("%")[0] + ".jpg",
+        player_image_url=player.split("%")[0] + ".jpg",
+        opponent_image_url=opponent.split("%")[0] + ".jpg",
     )
     return html_string
 
