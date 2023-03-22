@@ -18,8 +18,8 @@ def build_html_string(
     html_string = template.render(
         player=player,
         opponent=opponent,
-        player_name=player.split("%")[0],
-        opponent_name=opponent.split("%")[0],
+        player_name=player.split("#")[0],
+        opponent_name=opponent.split("#")[0],
         update_time=update_time,
         all_time_matches=all_time_matches,
         player_total_wins=player_total_wins,
@@ -29,8 +29,8 @@ def build_html_string(
         latest_game_date=latest_game_date,
         player_latest_date_wins=player_latest_date_wins,
         opponent_latest_date_wins=opponent_latest_date_wins,
-        player_image_url=player.split("%")[0].lower() + ".jpg",
-        opponent_image_url=opponent.split("%")[0].lower() + ".jpg",
+        player_image_url=player.split("#")[0].lower() + ".jpg",
+        opponent_image_url=opponent.split("#")[0].lower() + ".jpg",
     )
     return html_string
 
