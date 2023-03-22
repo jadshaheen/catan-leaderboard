@@ -1,72 +1,60 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Catan Leaderboard</title>
-    <link rel="stylesheet" href="catan.css" />
-    <link rel="icon" href="../icon.png" />
-  </head>
-  <body>
-    <h1>Catan Leaderboard</h1>
-    <p><em>Last Updated: {{ update_time }}</em></p>
-    <div class="contentdiv">
-      <div class="wins_display">
-        <div class="big_container">
-          <h1 class="big_wins" id="left">{{ player_total_wins }}</h1>
-          <h2 class="big_percent">({{ player_percent }})</h2>
-        </div>
-      </div>
-      <div class="player">
-        <a href="https://colonist.io/profile/{{ player }}">
-          <img class="player_img" src="{{ player_image_url }}" />
-        </a>
-      </div>
-      <div class="centerdivs">
-        <div class="allgames">
-          <p>All-Time Matches</p>
-          <h1>{{ all_time_matches }}</h1>
-        </div>
-        <div class="logo">
-          <a href="https://colonist.io">
-            <img class="logo_img" src="catan_logo.png" />
-          </a>
-        </div>
-      </div>
-      <div class="player">
-        <a href="https://colonist.io/profile/{{ opponent }}">
-          <img class="player_img" src="{{ opponent_image_url }}" />
-        </a>
-      </div>
-      <div class="wins_display">
-        <div class="big_container">
-          <h1 class="big_wins" id="right">{{ opponent_total_wins }}</h1>
-          <h2 class="big_percent">({{ opponent_percent }})</h2>
-        </div>
-      </div>
+<p><em>Last Updated: {{ update_time }}</em></p>
+<div class="contentdiv">
+  <div class="wins_display">
+    <div class="big_container">
+      <h1 class="big_wins" id="left">{{ player_total_wins }}</h1>
+      <h2 class="big_percent">({{ player_percent }})</h2>
     </div>
-    <div class="tablediv">
-      <table class="data">
-        <tr>
-          <td>{{ player_name }}</td>
-          <td>Player</td>
-          <td>{{ opponent_name }}</td>
-        </tr>
-        <tr>
-          <td>{{ player_total_wins }}</td>
-          <td>Total Wins</td>
-          <td>{{ opponent_total_wins }}</td>
-        </tr>
-        <tr>
-          <td>{{ player_percent }}</td>
-          <td>Win Percentage</td>
-          <td>{{ opponent_percent }}</td>
-        </tr>
-        <tr>
-          <td>{{ player_latest_date_wins }}</td>
-          <td>Daily ({{ latest_game_date }})</td>
-          <td>{{ opponent_latest_date_wins }}</td>
-        </tr>
-      </table>
+  </div>
+  <div class="player">
+    <a href="https://colonist.io/profile/{{ player }}">
+      <img class="player_img" src="{{ player_image_url }}" />
+    </a>
+  </div>
+  <div class="centerdivs">
+    <div class="allgames">
+      <p>All-Time Matches</p>
+      <h1>{{ all_time_matches }}</h1>
     </div>
-  </body>
-</html>
+    <div class="logo">
+      <a href="https://colonist.io">
+        <img class="logo_img" src="catan_logo.png" />
+      </a>
+    </div>
+  </div>
+  <div class="player">
+    <a href="https://colonist.io/profile/{{ opponent }}">
+      <img class="player_img" src="{{ opponent_image_url }}" />
+    </a>
+  </div>
+  <div class="wins_display">
+    <div class="big_container">
+      <h1 class="big_wins" id="right">{{ opponent_total_wins }}</h1>
+      <h2 class="big_percent">({{ opponent_percent }})</h2>
+    </div>
+  </div>
+</div>
+<div class="tablediv">
+  <table class="data">
+    <tr>
+      <td>{{ player_name }}</td>
+      <td>Player</td>
+      <td>{{ opponent_name }}</td>
+    </tr>
+    <tr>
+      <td>{{ player_total_wins }}</td>
+      <td>Total Wins</td>
+      <td>{{ opponent_total_wins }}</td>
+    </tr>
+    <tr>
+      <td>{{ player_percent }}</td>
+      <td>Win Percentage</td>
+      <td>{{ opponent_percent }}</td>
+    </tr>
+    <tr>
+      <td>{{ player_latest_date_wins }}</td>
+      <td>Daily ({{ latest_game_date }})</td>
+      <td>{{ opponent_latest_date_wins }}</td>
+    </tr>
+  </table>
+</div>

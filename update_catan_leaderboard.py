@@ -134,7 +134,7 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
 
     new_leaderboard_file_data = []
 
-    print("Updating Catan Leaderboard data...")
+    print("Updating Catan Leaderboard data for " + player + " and " + opponent + "...")
     update_time = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
     game_history = get_game_history_table(player)
 
