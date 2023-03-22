@@ -45,7 +45,7 @@ def get_game_history_table(player):
     # which checks for the presence of children <tr> elements of the <tbody>.
     attempt_num = 1
     while not table_rows and attempt_num <= 5:
-        driver.get(BASE_URL.format(player))
+        driver.get(BASE_URL.format(player.replace("#", "%23")))
         # Instead of using driver.implicitly_wait, we sleep here instead. The above driver.get line loads the website, but it's only when we
         # explicitly ask for the page source (on the next line) that the html is grabbed. So this is more confident way to make sure the tbody
         # appears, without necessitating the while loop (we leave the loop for now for testing).
@@ -124,10 +124,6 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
     if args.test:
         leaderboard_filepath = "/Users/jad/Desktop/catan_leaderboard_test.txt"
         html_filepath = "/Users/jad/Desktop/catan_test.html"
-
-    # player names that include '#' character (a colonist default) need to use encoding for urls to work
-    player = player.replace("#", "%23")
-    opponent = opponent.replace("#", "%23")
 
     current_leaderboard_data = get_current_leaderboard_data(leaderboard_filepath)
 
