@@ -306,10 +306,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     leaderboard_path = LEADERBOARD_FILEPATH.format(
-        args.player.split("%")[0], args.opponent.split("%")[0]
+        args.player.split("#")[0], args.opponent.split("#")[0]
     )
     html_path = LEADERBOARD_HTML_DISPLAY_FILEPATH.format(
-        args.player.split("%")[0], args.opponent.split("%")[0]
+        args.player.split("#")[0], args.opponent.split("#")[0]
     )
 
     update_leaderboard(args, leaderboard_path, html_path)
