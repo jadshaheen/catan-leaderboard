@@ -86,7 +86,7 @@ def filter_rows(table_rows, opponent, last_updated):
     data = [
         [
             str(
-                datetime.strptime(row[0], "%m/%d/%Y, %I:%M:%S %p")
+                datetime.strptime(row[0], "%m/%d/%Y, %I:%M %p")
                 + timedelta(
                     minutes=int(row[4].split(":")[0]), seconds=int(row[4].split(":")[1])
                 )
