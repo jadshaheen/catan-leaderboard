@@ -25,6 +25,7 @@ LEADERBOARD_HTML_DISPLAY_FILEPATH = (
     "/Users/jad/Desktop/projects/jadshaheen.github.io/catan/{}_{}.html"
 )
 
+chrome_driver_path = "./chromedriver"
 
 def get_game_history_table(player):
     """
@@ -35,7 +36,7 @@ def get_game_history_table(player):
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()), options=options
+        service=Service(chrome_driver_path), options=options
     )
 
     table_rows = None
