@@ -87,7 +87,7 @@ def filter_rows(table_rows, opponent, last_updated):
     data = [
         [
             str(
-                datetime.strptime(row[0], "%m/%d/%Y, %I:%M %p")
+                datetime.strptime(row[0].replace("24:", "00:"), "%m/%d/%Y, %H:%M")
                 + timedelta(
                     minutes=int(row[4].split(":")[0]), seconds=int(row[4].split(":")[1])
                 )
@@ -98,7 +98,7 @@ def filter_rows(table_rows, opponent, last_updated):
     ]
 
     # filter out unfinished games
-    filtered_data = [row for row in data if row[5] == "finished"]
+    filtered_data = [row for row in data if row[5] == "check"]
     # filter out games that don't involve 'opponent'
     filtered_data = [row for row in filtered_data if opponent in row[6].split(" ")]
     # filter out games that ENDED before LAST_UPDATED (aka would already have been included in leaderboard)
@@ -128,11 +128,6 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
 
     current_leaderboard_data = get_current_leaderboard_data(leaderboard_filepath)
 
-    time_since_last_refresh = datetime.now() - datetime.strptime(
-        current_leaderboard_data.get("last_updated"), "%Y-%m-%d %H:%M:%S"
-    )
-    time_since_last_refresh = time_since_last_refresh.total_seconds()
-
     new_leaderboard_file_data = []
 
     print("Updating Catan Leaderboard data for " + player + " and " + opponent + "...")
@@ -147,7 +142,6 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
         matches = filter_rows(
             game_history, opponent, current_leaderboard_data.get("last_updated")
         )
-
         # Don't try to update if no games have been played since last update
         if len(matches) > 0:
             wins_dict = get_num_wins(matches, player, opponent)
