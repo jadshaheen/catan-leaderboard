@@ -27,6 +27,7 @@ LEADERBOARD_HTML_DISPLAY_FILEPATH = (
 
 chrome_driver_path = "./chromedriver"
 
+
 def get_game_history_table(player):
     """
     Returns a list where each item is an HTML <tr> element representing one match in USER's
@@ -36,7 +37,7 @@ def get_game_history_table(player):
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(
-        service=Service(chrome_driver_path), options=options
+        service=Service(ChromeDriverManager().install()), options=options
     )
 
     table_rows = None
