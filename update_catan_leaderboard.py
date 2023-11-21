@@ -30,7 +30,7 @@ chrome_driver_path = "./chromedriver"
 
 def get_game_history_table(player):
     """
-    Returns a list where each item is an HTML <tr> element representing one match in USER's
+    Returns a list where each item is an HTML <tr> element representing one match in PLAYER's
     last 100 games
     """
     options = Options()
@@ -297,11 +297,14 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+
+    playerPathArg = "abhi" if args.player == "Abhi0875" else args.player
+
     leaderboard_path = LEADERBOARD_FILEPATH.format(
-        args.player.split("#")[0].lower(), args.opponent.split("#")[0].lower()
+        playerPathArg.split("#")[0].lower(), args.opponent.split("#")[0].lower()
     )
     html_path = LEADERBOARD_HTML_DISPLAY_FILEPATH.format(
-        args.player.split("#")[0].lower(), args.opponent.split("#")[0].lower()
+        playerPathArg.split("#")[0].lower(), args.opponent.split("#")[0].lower()
     )
 
     update_leaderboard(args, leaderboard_path, html_path)
