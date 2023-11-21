@@ -27,6 +27,17 @@ LEADERBOARD_HTML_DISPLAY_FILEPATH = (
 
 chrome_driver_path = "./chromedriver"
 
+player_to_name = {
+    "Abhi0875": "Abhi",
+    "Abhi#6004": "Abhi",
+    "Saquon": "Zaki",
+    "JBlova": "Lali",
+    "pill": "AJ",
+    "viri": "Virindh",
+    "jad": "Jad",
+    "umzaki": "Mom",
+}
+
 
 def get_game_history_table(player):
     """
@@ -131,7 +142,13 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
 
     new_leaderboard_file_data = []
 
-    print("Updating Catan Leaderboard data for " + player + " and " + opponent + "...")
+    print(
+        "Updating Catan Leaderboard data for "
+        + player_to_name[player]
+        + " and "
+        + player_to_name[opponent]
+        + "..."
+    )
     update_time = datetime.strftime(datetime.now(), "%Y-%m-%d %H:%M:%S")
     game_history = get_game_history_table(player)
 
@@ -202,8 +219,8 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
                 )
 
             new_leaderboard_file_data = build_new_leaderboard_file_data(
-                player=player,
-                opponent=opponent,
+                player=player_to_name[player],
+                opponent=player_to_name[opponent],
                 update_time=update_time,
                 all_time_matches=updated_total_matches,
                 player_total_wins=player_total_wins,
@@ -220,8 +237,8 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
 
             with open(html_filepath, "w") as file:
                 html_string = build_html_string(
-                    player=player,
-                    opponent=opponent,
+                    player=player_to_name[player],
+                    opponent=player_to_name[opponent],
                     update_time=update_time,
                     all_time_matches=updated_total_matches,
                     player_total_wins=player_total_wins,
@@ -251,8 +268,8 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
                         file.write(line)
                 with open(html_filepath, "w") as file:
                     html_string = build_html_string(
-                        player=player,
-                        opponent=opponent,
+                        player=player_to_name[player],
+                        opponent=player_to_name[opponent],
                         update_time=update_time,
                         all_time_matches=current_leaderboard_data.get("player_wins")
                         + current_leaderboard_data.get("opponent_wins"),
@@ -298,13 +315,11 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    playerPathArg = "abhi" if args.player == "Abhi0875" else args.player
-
     leaderboard_path = LEADERBOARD_FILEPATH.format(
-        playerPathArg.split("#")[0].lower(), args.opponent.split("#")[0].lower()
+        player_to_name[args.player].lower(), player_to_name[args.opponent].lower()
     )
     html_path = LEADERBOARD_HTML_DISPLAY_FILEPATH.format(
-        playerPathArg.split("#")[0].lower(), args.opponent.split("#")[0].lower()
+        player_to_name[args.player].lower(), player_to_name[args.opponent].lower()
     )
 
     update_leaderboard(args, leaderboard_path, html_path)
