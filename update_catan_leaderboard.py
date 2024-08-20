@@ -48,7 +48,7 @@ def get_game_history_table(player):
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(
-        service=Service(ChromeDriverManager().install()), options=options
+        service=Service(chrome_driver_path), options=options
     )
 
     table_rows = None
