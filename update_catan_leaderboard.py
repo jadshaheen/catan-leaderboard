@@ -35,6 +35,7 @@ player_to_name = {
     "viri": "Virindh",
     "jad": "Jad",
     "umzaki": "Mom",
+    "Dinin0213": "Mansi",
 }
 
 
