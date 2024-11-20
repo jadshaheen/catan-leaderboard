@@ -24,7 +24,7 @@ LEADERBOARD_HTML_DISPLAY_FILEPATH = (
     "/Users/jad/Desktop/projects/jadshaheen.github.io/catan/{}_{}.html"
 )
 
-chrome_driver_path = "./chromedriver"
+CHROME_DRIVER_PATH = "./chromedriver"
 
 player_to_name = {
     "Abhi0875": "Abhi",
@@ -47,9 +47,7 @@ def get_game_history_table(player):
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
-    driver = webdriver.Chrome(
-        service=Service(chrome_driver_path), options=options
-    )
+    driver = webdriver.Chrome(service=Service(CHROME_DRIVER_PATH), options=options)
 
     table_rows = None
 
@@ -65,7 +63,7 @@ def get_game_history_table(player):
         time.sleep(4)
         html = driver.page_source
         soup = BeautifulSoup(html, "html.parser")
-        table = soup.find("tbody", {"id": "profile_games_table"})
+        table = soup.find("tbody", {"id": "game-history-table-body"})
         table_rows = table.find_all("tr", recursive=False)
         attempt_num += 1
 
@@ -79,42 +77,62 @@ def filter_rows(table_rows, opponent, last_updated):
     data = []
 
     for i in range(len(table_rows))[::2]:
-        datum = []
-        for col in table_rows[i].find_all("td"):
-            # the first image alt text encodes whether the game was finished
-            image = col.find("img", alt=True)
-            if image:
-                datum.append(image["alt"])
-            else:
-                datum.append(col.text)
-        secondary_table = [col.text for col in table_rows[i + 1].find_all("td")]
-        # secondary table is of the form [..., opponent, '', rank]
-        for j in range(len(secondary_table)):
-            if secondary_table[j].strip() == opponent:
-                datum.append(secondary_table[j + 2])
+        datum = {}
+        for index, col in enumerate(table_rows[i].find_all("td")):
+            if index == 0:
+                datum["time"] = col.text
+            elif index == 3:
+                datum["duration"] = col.text
+
+        secondary_table = (
+            table_rows[i + 1]
+            .find("table", {"class": "game-details-table"})
+            .find_all("tr")
+        )
+        players = []
+        ranks = []
+        datum["finished"] = True
+        for row in secondary_table:
+            cols = row.find_all("td")
+            for index, col in enumerate(cols):
+                if index == 0:
+                    players.append(col.text)
+                if index == 1:
+                    ranks.append(col.text)
+                if index == 3:
+                    finished = col.find("img", alt=True)["alt"]
+                    if finished == "X":
+                        datum["finished"] = False
+        datum["players"] = players
+        datum["ranks"] = ranks
+
         data.append(datum)
 
     # Colonist stores the START time of each game; for our script to work, we update the time for each match row to be the start time plus the
     # duration, effectively resulting in the END time. This allows our script to not overlook games which were in progress when an update was triggered.
     data = [
-        [
-            str(
-                datetime.strptime(row[0].replace("24:", "00:"), "%m/%d/%Y, %H:%M")
-                + timedelta(
-                    minutes=int(row[4].split(":")[0]), seconds=int(row[4].split(":")[1])
+        {
+            **row,
+            "end_time": str(
+                datetime.strptime(
+                    row.get("time").replace("24:", "00:"), "%m/%d/%Y, %H:%M"
                 )
-            )
-        ]
-        + row[1:]
+                + timedelta(
+                    minutes=int(row.get("duration").split(":")[0]),
+                    seconds=int(row.get("duration").split(":")[1]),
+                )
+            ),
+        }
         for row in data
     ]
 
     # filter out unfinished games
-    filtered_data = [row for row in data if row[5] == "check"]
+    filtered_data = [row for row in data if row.get("finished")]
+
     # filter out games that don't involve 'opponent'
-    filtered_data = [row for row in filtered_data if opponent in row[6].split(" ")]
+    filtered_data = [row for row in filtered_data if opponent in row.get("players")]
     # filter out games that ENDED before LAST_UPDATED (aka would already have been included in leaderboard)
-    filtered_data = [datum for datum in filtered_data if datum[0] > last_updated]
+    filtered_data = [row for row in filtered_data if row.get("end_time") > last_updated]
 
     return filtered_data
 
@@ -123,7 +141,14 @@ def get_num_wins(match_data, player, opponent):
     wins_dict = {player: 0, opponent: 0}
 
     for match in match_data:
-        if int(match[1].split("/")[0]) < int(match[-1].split("/")[0]):
+        player_rank, opp_rank = 0, 0
+        for player_name, rank in zip(match.get("players"), match.get("ranks")):
+            if player_name == player:
+                player_rank = int(rank.split("/")[0])
+            if player_name == opponent:
+                opp_rank = int(rank.split("/")[0])
+
+        if player_rank < opp_rank:
             wins_dict[player] += 1
         else:
             wins_dict[opponent] += 1
@@ -182,7 +207,7 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
 
             # update daily leaderboard
             # Retrieve latest date of NEW game played which will be date of first element in matches (below)
-            latest_game_date = matches[0][0].split(" ")[0]
+            latest_game_date = matches[0].get("end_time").split(" ")[0]
             latest_date_matches, player_latest_date_wins, opponent_latest_date_wins = (
                 0,
                 0,
@@ -205,7 +230,7 @@ def update_leaderboard(args, leaderboard_filepath, html_filepath):
                 latest_date_match_list = [
                     match
                     for match in matches
-                    if match[0].split(" ")[0] == latest_game_date
+                    if match.get("end_time").split(" ")[0] == latest_game_date
                 ]
                 latest_date_wins_dict = get_num_wins(
                     latest_date_match_list, player, opponent
