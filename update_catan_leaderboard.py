@@ -1,4 +1,6 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
 from webdriver_manager.chrome import ChromeDriverManager
 
 from bs4 import BeautifulSoup
@@ -46,7 +48,7 @@ def get_game_history_table(player):
     options = Options()
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
-    driver = webdriver.Chrome(ChromeDriverManager().install())
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
     table_rows = None
 
